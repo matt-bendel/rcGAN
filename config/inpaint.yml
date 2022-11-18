@@ -1,0 +1,34 @@
+checkpoint_dir: ""
+data_parallel: 1
+
+data:
+  channels: 3
+  path: "/storage/celebA-HQ/celeba_hq_128"
+  resolution: 128
+
+optimizer:
+  lr: 0.001
+  beta_1: 0
+  beta_2: 0.99
+
+train:
+  batch_size: 128
+  n_epochs: 110
+  P: 2
+  adv_weight: 0.00003
+  l1_weight: 1
+  num_iters_discriminator: 1
+  gp_weight: 10
+  drift_weight: 0.001
+
+validate:
+  batch_size: 128
+  mu_std: 0.01
+  psnr_threshold: 0.25
+  P: 32
+  cfid_P: 8
+
+test:
+  batch_size: 128
+  P: 32
+  cfid_P: 32
