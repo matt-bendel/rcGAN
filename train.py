@@ -161,7 +161,7 @@ def dict2namespace(config):
 
 if __name__ == '__main__':
     cuda = True if torch.cuda.is_available() else False
-    torch.backends.cudnn.enabled = True
+    torch.backends.cudnn.enabled = False
     # torch.backends.cudnn.benchmark = True
 
     args = create_arg_parser().parse_args()
