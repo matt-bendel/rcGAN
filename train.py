@@ -76,11 +76,9 @@ def train(rank, world_size, args):
                 x = x.cuda()
                 mask = mask.cuda()
 
-                trainer.update_gen_status(val=True)
                 for j in range(cfg.train.num_iters_discriminator):
                     d_loss = trainer.discriminator_update(x, y, mask)
 
-                trainer.update_gen_status(val=False)
                 g_loss = trainer.generator_update(x, y, mask)
 
                 print(
