@@ -15,11 +15,11 @@ def get_gan(cfg, mri, resume, rank, world_size):
 
 def get_gan_fresh(cfg, mri, rank, world_size):
     generator = build_generator(cfg, mri)
-    discriminator = build_discriminator(cfg, mri)
+    discriminator = torch.nn.SyncBatchNorm.convert_sync_batchnorm(build_discriminator(cfg, mri))
 
     if cfg.data_parallel:
-        generator = DDP(generator.to(rank), device_ids=[rank], output_device=rank, broadcast_buffers=False, find_unused_parameters=True)#torch.nn.DataParallel(generator)
-        discriminator = DDP(discriminator.to(rank), device_ids=[rank], output_device=rank, broadcast_buffers=False, find_unused_parameters=True)#torch.nn.DataParallel(discriminator)
+        generator = DDP(generator.to(rank), device_ids=[rank], output_device=rank)#torch.nn.DataParallel(generator)
+        discriminator = DDP(discriminator.to(rank), device_ids=[rank], output_device=rank)#torch.nn.DataParallel(discriminator)
 
     generator = get_gen_wrapper(mri, cfg, generator)
 
