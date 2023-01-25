@@ -6,13 +6,22 @@ import os
 import pathlib
 
 import numpy as np
+import torch.distributed as dist
 
 from runners.trainer import Trainer
 from data_loaders import create_data_loaders_train
 from parse_args import create_arg_parser
 from metrics import cfid
 
-def train(args):
+def train(rank, world_size, args):
+    torch.cuda.set_device(rank)
+    dist.init_process_group(
+        backend='nccl',
+        init_method='env://',
+        world_size=world_size,
+        rank=rank
+    )
+
     random.seed(0)
     np.random.seed(0)
     torch.manual_seed(0)
@@ -29,7 +38,7 @@ def train(args):
     cfg.checkpoint_dir = pathlib.Path(cfg.checkpoint_dir)
     cfg.checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
-    trainer = Trainer(cfg, args.is_mri, args.resume)
+    trainer = Trainer(cfg, args.is_mri, args.resume, rank, world_size)
 
     std_mults = [trainer.beta_std_mult]
     psnr_diffs = []
@@ -53,15 +62,18 @@ def train(args):
     if args.resume:
         trainer.start_epoch += 1
 
-    train_loader, dev_loader = create_data_loaders_train(args.is_mri, cfg)
+    train_loader, dev_loader = create_data_loaders_train(args.is_mri, cfg, rank, world_size)
 
     for epoch in range(trainer.start_epoch, cfg.train.n_epochs):
         trainer.update_gen_status(val=False)
+        train_loader.sampler.set_epoch(epoch)
+        dev_loader.sampler.set_epoch(epoch)
+
         for i, data in enumerate(train_loader):
             x, y, _, _, mask = data[0]
-            y = y.to(args.device)
-            x = x.to(args.device)
-            mask = mask.to(args.device)
+            y = y.cuda()
+            x = x.cuda()
+            mask = mask.cuda()
 
             for j in range(cfg.train.num_iters_discriminator):
                 d_loss = trainer.discriminator_update(x, y, mask)
@@ -84,14 +96,14 @@ def train(args):
             for i, data in enumerate(dev_loader):
                 with torch.no_grad():
                     x, y, mean, std, mask = data[0]
-                    y = y.to(args.device)
-                    x = x.to(args.device)
-                    mean = mean.to(args.device)
-                    std = std.to(args.device)
-                    mask = mask.to(args.device)
+                    y = y.cuda()
+                    x = x.cuda()
+                    mean = mean.cuda()
+                    std = std.cuda()
+                    mask = mask.cuda()
 
                     if args.is_mri:
-                        psnr_8, psnr_1 = trainer.validate_mri(x, y, mean, std, mask)
+                        psnr_8, psnr_1 = trainer.validate_mri(x, y, mean, std, mask, rank)
                     else:
                         psnr_8, psnr_1 = trainer.validate_inpaint(x, y, mean, std, mask)
 
@@ -110,26 +122,31 @@ def train(args):
         best_model = CFID < trainer.best_loss and (np.abs(psnr_diff) <= cfg.validate.psnr_threshold)
         trainer.best_loss = CFID if best_model else trainer.best_loss
 
-        trainer.save_model(best_model, epoch)
+        if rank == 0:
+            trainer.save_model(best_model, epoch)
 
-        std_mults.append(trainer.beta_std_mult)
-        psnr_diffs.append(psnr_diff)
-        file = open("std_weights.txt", "w+")
+            std_mults.append(trainer.beta_std_mult)
+            psnr_diffs.append(psnr_diff)
+            file = open("std_weights.txt", "w+")
 
-        # Saving the 2D array in a text file
-        content = str(std_mults)
-        file.write(content)
-        file.close()
+            # Saving the 2D array in a text file
+            content = str(std_mults)
+            file.write(content)
+            file.close()
 
-        file = open("psnr_diffs.txt", "w+")
+            file = open("psnr_diffs.txt", "w+")
 
-        # Saving the 2D array in a text file
-        content = str(psnr_diffs)
-        file.write(content)
-        file.close()
+            # Saving the 2D array in a text file
+            content = str(psnr_diffs)
+            file.write(content)
+            file.close()
 
-        print(f"END OF EPOCH {epoch + 1}: \n")
-        print(f"[Validation 8-PSNR: {np.mean(losses['psnr_8']):.2f}] [Validation CFID: {CFID:.2f}]")
+            print(f"END OF EPOCH {epoch + 1}: \n")
+            print(f"[Validation 8-PSNR: {np.mean(losses['psnr_8']):.2f}] [Validation CFID: {CFID:.2f}]")
+
+        dist.barrier()
+
+    dist.destroy_process_group()
 
 def dict2namespace(config):
     namespace = argparse.Namespace()
@@ -143,6 +160,7 @@ def dict2namespace(config):
 
 if __name__ == '__main__':
     cuda = True if torch.cuda.is_available() else False
+    torch.backends.cudnn.enabled = True
     torch.backends.cudnn.benchmark = True
 
     args = create_arg_parser().parse_args()
@@ -155,4 +173,10 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.manual_seed(0)
 
-    train(args)
+    world_size = 2
+
+    os.environ["MASTER_ADDR"] = 'localhost'
+    os.environ["MASTER_PORT"] = "12355"
+    os.environ["WORLD_SIZE"] = str(world_size)
+
+    mp.spawn(train, args=(world_size, args,), nprocs=world_size)

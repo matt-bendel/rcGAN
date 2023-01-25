@@ -66,24 +66,27 @@ def create_datasets(cfg, big_test=False):
     return dev_data, train_data
 
 
-def create_data_loaders_mri(cfg, big_test=False, drop_last_val=True):
+def create_data_loaders_mri(cfg, rank, world_size, big_test=False, drop_last_val=True):
     dev_data, train_data = create_datasets(cfg, big_test=big_test)
 
+    train_sampler = torch.utils.data.distributed.DistributedSampler(train_data, num_replicas=world_size, rank=rank, shuffle=False, drop_last=True)
     train_loader = DataLoader(
         dataset=train_data,
         batch_size=cfg.train.batch_size,
-        shuffle=True,
-        num_workers=20,
-        pin_memory=True,
+        num_workers=0,
+        pin_memory=False,
         drop_last=True, # Helps with training time on multiple GPUs
+        sampler=train_sampler
     )
 
+    dev_sampler = torch.utils.data.distributed.DistributedSampler(dev_data, num_replicas=world_size, rank=rank, shuffle=False, drop_last=True)
     dev_loader = DataLoader(
         dataset=dev_data,
         batch_size=cfg.train.batch_size,
-        num_workers=20,
-        pin_memory=True,
-        drop_last=drop_last_val, # Helps with training time on multiple GPUs - set false for testing
+        num_workers=0,
+        pin_memory=False,
+        drop_last=True, # Helps with training time on multiple GPUs - set false for testing
+        sampler=dev_sampler
     )
 
     return train_loader, dev_loader

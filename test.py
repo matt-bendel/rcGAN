@@ -39,11 +39,11 @@ def test(args):
     print("\nComputing PSNR and SSIM")
     for i, data in enumerate(test_loader):
         x, y, mean, std, mask = data[0]
-        y = y.to(args.device)
-        x = x.to(args.device)
-        mean = mean.to(args.device)
-        std = std.to(args.device)
-        mask = mask.to(args.device)
+        y = y.cuda()
+        x = x.cuda()
+        mean = mean.cuda()
+        std = std.cuda()
+        mask = mask.cuda()
 
         with torch.no_grad():
             if args.is_mri:

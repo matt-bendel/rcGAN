@@ -143,7 +143,7 @@ class FIDMetric:
 
     def _get_joint_statistics(self, image_embed, cond_embed):
         if self.cuda:
-            joint_embed = torch.cat([image_embed, cond_embed], dim=1).to('cuda:3')
+            joint_embed = torch.cat([image_embed, cond_embed], dim=1).cuda()
         else:
             joint_embed = np.concatenate([image_embed, cond_embed], axis=1)
         mu, sigma = get_embedding_statistics(joint_embed, cuda=self.cuda)

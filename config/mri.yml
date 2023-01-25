@@ -20,7 +20,7 @@ optimizer:
   beta_2: 0.99
 
 train:
-  batch_size: 40
+  batch_size: 10
   n_epochs: 100
   P: 2
   adv_weight: 0.01

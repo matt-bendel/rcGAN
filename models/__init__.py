@@ -5,20 +5,21 @@ from generator_wrappers import get_gen_wrapper
 from .inpainting.comodgan.co_mod_gan import CoModGANGenerator, CoModGANDisc
 from .mri.generator import MRIGenerator
 from .mri.discriminator import MRIDiscriminator
+from torch.nn.parallel import DistributedDataParallel as DDP
 
-def get_gan(cfg, mri, resume):
+def get_gan(cfg, mri, resume, rank, world_size):
     if resume:
         return get_gan_resume(cfg, mri)
     else:
-        return get_gan_fresh(cfg, mri)
+        return get_gan_fresh(cfg, mri, rank, world_size)
 
-def get_gan_fresh(cfg, mri):
+def get_gan_fresh(cfg, mri, rank, world_size):
     generator = build_generator(cfg, mri)
     discriminator = build_discriminator(cfg, mri)
 
     if cfg.data_parallel:
-        generator = torch.nn.DataParallel(generator)
-        discriminator = torch.nn.DataParallel(discriminator)
+        generator = DDP(generator.to(rank), device_ids=[rank], output_device=rank)#torch.nn.DataParallel(generator)
+        discriminator = DDP(discriminator.to(rank), device_ids=[rank], output_device=rank)#torch.nn.DataParallel(discriminator)
 
     generator = get_gen_wrapper(mri, cfg, generator)
 

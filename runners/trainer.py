@@ -10,13 +10,13 @@ from metrics import psnr
 from torch.nn import functional as F
 
 class Trainer:
-    def __init__(self, cfg, mri, resume):
+    def __init__(self, cfg, mri, resume, rank, world_size):
         self.cfg = cfg
         self.mri = mri
         self.beta_std_mult = 1
         self.beta_std_0 = np.sqrt(2 / (np.pi * cfg.train.P * (cfg.train.P + 1)))
 
-        self.G, self.D, self.G_opt, self.D_opt, self.best_loss, self.start_epoch = get_gan(cfg, mri, resume)
+        self.G, self.D, self.G_opt, self.D_opt, self.best_loss, self.start_epoch = get_gan(cfg, mri, resume, rank, world_size)
 
     def update_gen_status(self, val):
         self.G.update_gen_status(val=val)
@@ -71,7 +71,7 @@ class Trainer:
 
         return d_loss.item()
 
-    def validate_mri(self, x, y, mean, std, mask):
+    def validate_mri(self, x, y, mean, std, mask, rank):
         losses = {
             'psnr_1': [],
             'psnr_8': [],
@@ -100,7 +100,7 @@ class Trainer:
         x_hat_avg_reshaped[:, :, :, :, 1] = x_hat_avg[:, self.cfg.data.num_coils:self.cfg.data.num_coils*2, :, :]
 
         for j in range(y.size(0)):
-            S = get_sense_operator(self.cfg, y[j] * std[j] + mean[j])
+            S = get_sense_operator(self.cfg, y[j] * std[j] + mean[j], rank)
 
             x_mc_np = tensor_to_complex_np((x_reshaped[j]).cpu())
             x_mc_hat_1 = tensor_to_complex_np((x_hat_avg_reshaped[j]).cpu())
