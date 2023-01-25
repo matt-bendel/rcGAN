@@ -180,4 +180,5 @@ if __name__ == '__main__':
     os.environ["MASTER_PORT"] = "12355"
     os.environ["WORLD_SIZE"] = str(world_size)
 
-    mp.spawn(train, args=(world_size, args,), nprocs=world_size)
+    with torch.autograd.set_detect_anomaly(True):
+        mp.spawn(train, args=(world_size, args,), nprocs=world_size)
