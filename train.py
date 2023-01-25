@@ -81,11 +81,12 @@ def train(rank, world_size, args):
 
                 g_loss = trainer.generator_update(x, y, mask)
 
-                print(
-                    "[Epoch %d/%d] [Batch %d/%d] [D loss: %.4f] [G loss: %.4f]"
-                    % (epoch + 1, cfg.train.n_epochs, i, len(train_loader.dataset) / cfg.train.batch_size, d_loss,
-                       g_loss)
-                )
+                if rank == 0:
+                    print(
+                        "[Epoch %d/%d] [Batch %d/%d] [D loss: %.4f] [G loss: %.4f]"
+                        % (epoch + 1, cfg.train.n_epochs, i, len(train_loader.dataset) / cfg.train.batch_size, d_loss,
+                           g_loss)
+                    )
 
             losses = {
                 'psnr_1': [],
