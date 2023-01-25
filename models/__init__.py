@@ -18,8 +18,8 @@ def get_gan_fresh(cfg, mri, rank, world_size):
     discriminator = build_discriminator(cfg, mri)
 
     if cfg.data_parallel:
-        generator = DDP(generator.to(rank), device_ids=[rank], output_device=rank, broadcast_buffers=False, find_unused_parameters=True)#torch.nn.DataParallel(generator)
-        discriminator = DDP(discriminator.to(rank), device_ids=[rank], output_device=rank, broadcast_buffers=False, find_unused_parameters=True)#torch.nn.DataParallel(discriminator)
+        generator = DDP(generator.to(rank), device_ids=[rank], output_device=rank, broadcast_buffers=False)#torch.nn.DataParallel(generator)
+        discriminator = DDP(discriminator.to(rank), device_ids=[rank], output_device=rank, broadcast_buffers=False)#torch.nn.DataParallel(discriminator)
 
     generator = get_gen_wrapper(mri, cfg, generator)
 

@@ -49,6 +49,7 @@ class Trainer:
 
     def discriminator_update(self, x, y, mask):
         # More efficient way to zero gradient
+        self.D.train()
         for param in self.D.parameters():
             param.grad = None
 
@@ -68,6 +69,7 @@ class Trainer:
 
         d_loss.backward()
         self.D_opt.step()
+        self.D.eval()
 
         return d_loss.item()
 
