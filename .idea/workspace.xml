@@ -5,16 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5325b1d-e37b-4345-b080-21ad24c9aa46" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/mri.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/mri.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loaders/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loaders/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loaders/prepare_data_mri.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loaders/prepare_data_mri.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metrics/id_metrics/FIDMetric.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics/id_metrics/FIDMetric.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mri_utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/mri_utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runners/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/runners/trainer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,7 +83,7 @@
       <workItem from="1668719799086" duration="791000" />
       <workItem from="1673637534303" duration="23000" />
       <workItem from="1674624941700" duration="193000" />
-      <workItem from="1674658830190" duration="891000" />
+      <workItem from="1674658830190" duration="1145000" />
     </task>
     <servers />
   </component>

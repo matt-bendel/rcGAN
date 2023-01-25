@@ -7,6 +7,7 @@ import pathlib
 
 import numpy as np
 import torch.distributed as dist
+import torch.multiprocessing as mp
 
 from runners.trainer import Trainer
 from data_loaders import create_data_loaders_train
