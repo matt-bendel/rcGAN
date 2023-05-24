@@ -58,14 +58,11 @@ if __name__ == "__main__":
             cfg = json.loads(json.dumps(cfg), object_hook=load_object)
 
         cfg.batch_size = cfg.batch_size * 4
-        dm = MRIDataModule(cfg, args.mask_type, big_test=True)
+        dm = MRIDataModule(cfg, big_test=True)
 
         dm.setup()
         test_loader = dm.test_dataloader()
-        if args.rcgan:
-            model_alias = rcGAN
-        else:
-            model_alias = L1SSIMMRI
+        model_alias = rcGAN
     else:
         print("No valid application selected. Please include one of the following args: --mri")
         exit()

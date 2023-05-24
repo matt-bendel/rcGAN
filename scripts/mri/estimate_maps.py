@@ -23,14 +23,13 @@ def load_object(dct):
 
 if __name__ == '__main__':
     torch.set_float32_matmul_precision('medium')
-    args = create_arg_parser().parse_args()
     seed_everything(1, workers=True)
 
     with open('configs/mri.yml', 'r') as f:
         cfg = yaml.load(f, Loader=yaml.FullLoader)
         cfg = json.loads(json.dumps(cfg), object_hook=load_object)
 
-    dm = MRIDataModule(cfg, args.mask_type)
+    dm = MRIDataModule(cfg)
     dm.setup()
     val_loader = dm.val_dataloader()
 

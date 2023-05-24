@@ -25,7 +25,7 @@ if __name__ == "__main__":
         cfg = yaml.load(f, Loader=yaml.FullLoader)
         cfg = json.loads(json.dumps(cfg), object_hook=load_object)
 
-    dm = MRIDataModule(cfg, args.mask_type)
+    dm = MRIDataModule(cfg)
     dm.setup()
     val_loader = dm.val_dataloader()
     best_epoch = -1
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         for epoch in range(start_epoch, end_epoch):
             print(f"VALIDATING EPOCH: {epoch + 1}")
             try:
-                model = Ohayon.load_from_checkpoint(checkpoint_path=cfg.checkpoint_dir + args.exp_name + f'/checkpoint-epoch={epoch}.ckpt')
+                model = rcGAN.load_from_checkpoint(checkpoint_path=cfg.checkpoint_dir + args.exp_name + f'/checkpoint-epoch={epoch}.ckpt')
             except Exception as e:
                 print(e)
                 continue
