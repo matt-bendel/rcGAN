@@ -1,158 +1,65 @@
-import random
 import torch
-import yaml
-import argparse
 import os
-import pathlib
+import yaml
+import types
+import json
 
-import numpy as np
+import pytorch_lightning as pl
 
-from runners.trainer import Trainer
-from data_loaders import create_data_loaders_train
-from parse_args import create_arg_parser
-from metrics import cfid
+from pytorch_lightning.callbacks import ModelCheckpoint
+from data.lightning.MRIDataModule import MRIDataModule
+from utils.parse_args import create_arg_parser
+from models.lightning.rcGAN import rcGAN
+from pytorch_lightning import seed_everything
+from pytorch_lightning.loggers import WandbLogger
 
-def train(args):
-    random.seed(0)
-    np.random.seed(0)
-    torch.manual_seed(0)
 
-    if args.is_mri:
-        with open(os.path.join('config', 'mri.yml'), 'r') as f:
-            cfg = yaml.load(f)
-    else:
-        with open(os.path.join('config', 'inpaint.yml'), 'r') as f:
-            cfg = yaml.load(f)
+def load_object(dct):
+    return types.SimpleNamespace(**dct)
 
-    cfg = dict2namespace(cfg)
-
-    cfg.checkpoint_dir = pathlib.Path(cfg.checkpoint_dir)
-    cfg.checkpoint_dir.mkdir(parents=True, exist_ok=True)
-
-    trainer = Trainer(cfg, args.is_mri, args.resume)
-
-    std_mults = [trainer.beta_std_mult]
-    psnr_diffs = []
-
-    if args.resume:
-        std_mults = []
-        psnr_diffs = []
-
-        with open("std_weights.txt", "r") as file1:
-            for line in file1.readlines():
-                for i in line.split(","):
-                    std_mults.append(float(i.strip().replace('[', '').replace(']', '').replace(' ', '')))
-
-        with open("psnr_diffs.txt", "r") as file1:
-            for line in file1.readlines():
-                for i in line.split(","):
-                    psnr_diffs.append(float(i.strip().replace('[', '').replace(']', '').replace(' ', '')))
-
-        trainer.beta_std_mult = std_mults[-1]
-
-    if args.resume:
-        trainer.start_epoch += 1
-
-    train_loader, dev_loader = create_data_loaders_train(args.is_mri, cfg)
-
-    for epoch in range(trainer.start_epoch, cfg.train.n_epochs):
-        trainer.update_gen_status(val=False)
-        for i, data in enumerate(train_loader):
-            x, y, _, _, mask = data[0]
-            y = y.to(args.device)
-            x = x.to(args.device)
-            mask = mask.to(args.device)
-
-            for j in range(cfg.train.num_iters_discriminator):
-                d_loss = trainer.discriminator_update(x, y, mask)
-
-            g_loss = trainer.generator_update(x, y, mask)
-
-            print(
-                "[Epoch %d/%d] [Batch %d/%d] [D loss: %.4f] [G loss: %.4f]"
-                % (epoch + 1, cfg.train.n_epochs, i, len(train_loader.dataset) / cfg.train.batch_size, d_loss,
-                   g_loss)
-            )
-
-        losses = {
-            'psnr_1': [],
-            'psnr_8': []
-        }
-
-        trainer.update_gen_status(val=True)
-        with torch.no_grad():
-            for i, data in enumerate(dev_loader):
-                with torch.no_grad():
-                    x, y, mean, std, mask = data[0]
-                    y = y.to(args.device)
-                    x = x.to(args.device)
-                    mean = mean.to(args.device)
-                    std = std.to(args.device)
-                    mask = mask.to(args.device)
-
-                    if args.is_mri:
-                        psnr_8, psnr_1 = trainer.validate_mri(x, y, mean, std, mask)
-                    else:
-                        psnr_8, psnr_1 = trainer.validate_inpaint(x, y, mean, std, mask)
-
-                    # TODO: Implement this
-                    if args.train_gif:
-                        pass
-
-                    losses['psnr_1'].append(psnr_1)
-                    losses['psnr_8'].append(psnr_8)
-
-        psnr_diff = (np.mean(losses['psnr_1']) + 2.5) - np.mean(losses['psnr_8'])
-        trainer.beta_std_mult = trainer.beta_std_mult + cfg.validate.mu_std * psnr_diff
-
-        CFID = cfid(cfg, trainer.G, dev_loader, args.is_mri)
-
-        best_model = CFID < trainer.best_loss and (np.abs(psnr_diff) <= cfg.validate.psnr_threshold)
-        trainer.best_loss = CFID if best_model else trainer.best_loss
-
-        trainer.save_model(best_model, epoch)
-
-        std_mults.append(trainer.beta_std_mult)
-        psnr_diffs.append(psnr_diff)
-        file = open("std_weights.txt", "w+")
-
-        # Saving the 2D array in a text file
-        content = str(std_mults)
-        file.write(content)
-        file.close()
-
-        file = open("psnr_diffs.txt", "w+")
-
-        # Saving the 2D array in a text file
-        content = str(psnr_diffs)
-        file.write(content)
-        file.close()
-
-        print(f"END OF EPOCH {epoch + 1}: \n")
-        print(f"[Validation 8-PSNR: {np.mean(losses['psnr_8']):.2f}] [Validation CFID: {CFID:.2f}]")
-
-def dict2namespace(config):
-    namespace = argparse.Namespace()
-    for key, value in config.items():
-        if isinstance(value, dict):
-            new_value = dict2namespace(value)
-        else:
-            new_value = value
-        setattr(namespace, key, new_value)
-    return namespace
 
 if __name__ == '__main__':
-    cuda = True if torch.cuda.is_available() else False
-    torch.backends.cudnn.benchmark = True
-
+    torch.set_float32_matmul_precision('medium')
     args = create_arg_parser().parse_args()
-    # restrict visible cuda devices
-    if args.data_parallel or (args.device >= 0):
-        args.device = torch.device('cuda')
-    else:
-        args.device = torch.device('cpu')
-    random.seed(0)
-    np.random.seed(0)
-    torch.manual_seed(0)
+    seed_everything(0, workers=True)
 
-    train(args)
+    print(f"Experiment Name: {args.exp_name}")
+    print(f"Number of GPUs: {args.num_gpus}")
+
+    if args.mri:
+        with open('configs/mri.yml', 'r') as f:
+            cfg = yaml.load(f, Loader=yaml.FullLoader)
+            cfg = json.loads(json.dumps(cfg), object_hook=load_object)
+
+        dm = MRIDataModule(cfg, args.mask_type)
+
+        model = rcGAN(cfg, args.exp_name, args.num_gpus)
+    else:
+        print("No valid application selected. Please include one of the following args: --mri")
+        exit()
+
+    wandb_logger = WandbLogger(
+        project="my_project",  # TODO: Change to your project name - maybe make this an arg
+        name=args.exp_name,
+        log_model="all",
+        save_dir=cfg.checkpoint_dir + 'wandb'
+    )
+
+    checkpoint_callback_epoch = ModelCheckpoint(
+        monitor='epoch',
+        mode='max',
+        dirpath=cfg.checkpoint_dir + args.exp_name + '/',
+        filename='checkpoint-{epoch}',
+        save_top_k=50
+    )
+
+    trainer = pl.Trainer(accelerator="gpu", devices=args.num_gpus, strategy='ddp',
+                         max_epochs=cfg.num_epochs, callbacks=[checkpoint_callback_epoch],
+                         num_sanity_val_steps=2, profiler="simple", logger=wandb_logger, benchmark=False,
+                         log_every_n_steps=10)
+
+    if args.resume:
+        trainer.fit(model, dm,
+                    ckpt_path=cfg.checkpoint_dir + args.exp_name + f'/checkpoint-epoch={args.resume_epoch}.ckpt')
+    else:
+        trainer.fit(model, dm)
