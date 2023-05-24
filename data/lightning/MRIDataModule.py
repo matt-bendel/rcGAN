@@ -9,7 +9,7 @@ import torch
 import numpy as np
 
 from utils.mri.espirit import ifft, fft
-from data import transforms
+from utils.mri import transforms
 from utils.mri.fftc import ifft2c_new, fft2c_new
 from utils.mri.get_mask import get_mask
 
