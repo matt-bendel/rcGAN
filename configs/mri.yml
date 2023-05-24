@@ -1,5 +1,5 @@
-checkpoint_dir: "UPDATE - WHERE TO STORE CHECKPOINTS"
-data_path: "UPDATE - WHERE IS YOUR FASTMRI DATA? ..../data"
+checkpoint_dir: "/storage/matt_models/mri/"
+data_path: "/storage/fastMRI_brain/data"
 
 # MRI Args
 num_of_top_slices: 8
