@@ -66,7 +66,7 @@ def fetch_dir(
     Args:
         key: key to retrieve path from data_config_file. Expected to be in
             ("knee_path", "brain_path", "log_path").
-        data_config_file: Optional; Default path config file to fetch path
+        data_config_file: Optional; Default path configs file to fetch path
             from.
     Returns:
         The path to the specified directory.
@@ -84,7 +84,7 @@ def fetch_dir(
         data_dir = default_config[key]
 
         warn(
-            f"Path config at {data_config_file.resolve()} does not exist. "
+            f"Path configs at {data_config_file.resolve()} does not exist. "
             "A template has been created for you. "
             "Please enter the directory paths for your system to have defaults."
         )
