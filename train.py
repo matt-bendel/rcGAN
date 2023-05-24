@@ -31,7 +31,7 @@ if __name__ == '__main__':
             cfg = yaml.load(f, Loader=yaml.FullLoader)
             cfg = json.loads(json.dumps(cfg), object_hook=load_object)
 
-        dm = MRIDataModule(cfg, args.mask_type)
+        dm = MRIDataModule(cfg)
 
         model = rcGAN(cfg, args.exp_name, args.num_gpus)
     else:
