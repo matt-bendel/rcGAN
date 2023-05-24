@@ -12,7 +12,7 @@ import torch
 
 import fastmri
 
-from .subsample import MaskFunc
+from fastmri.data.subsample import MaskFunc
 
 
 def to_tensor(data: np.ndarray) -> torch.Tensor:

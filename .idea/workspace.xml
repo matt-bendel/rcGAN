@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5325b1d-e37b-4345-b080-21ad24c9aa46" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/data/lightning/MRIDataModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lightning/MRIDataModule.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/mri/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/mri/transforms.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +42,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/mattbendel/Documents/Research Projects/rcGAN/utils/mri",
+    "last_opened_file_path": "/Users/mattbendel/Documents/Research Projects/rcGAN",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -53,11 +53,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/utils/mri" />
       <recent name="$PROJECT_DIR$/utils" />
       <recent name="$PROJECT_DIR$/evaluation_scripts/cfid" />
       <recent name="$PROJECT_DIR$/models/archs/mri" />
-      <recent name="$PROJECT_DIR$/scripts/mri" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/models/lightning" />
@@ -230,7 +230,7 @@
       <workItem from="1666711407540" duration="2838000" />
       <workItem from="1668701794495" duration="2725000" />
       <workItem from="1668719799086" duration="791000" />
-      <workItem from="1684963294638" duration="3742000" />
+      <workItem from="1684963294638" duration="3923000" />
     </task>
     <servers />
   </component>
