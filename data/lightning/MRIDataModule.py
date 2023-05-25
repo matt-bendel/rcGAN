@@ -35,7 +35,7 @@ class DataTransform:
         self.mask = None
         self.test = test
 
-    def __call__(self, kspace, target, attrs, fname, slice, sense_maps=None, vh=None):
+    def __call__(self, kspace, target, attrs, fname, slice, sense_maps=None):
         """
         Args:
             kspace (numpy.array): Input k-space of shape (num_coils, rows, cols, 2) for multi-coil
@@ -135,7 +135,7 @@ class MRIDataModule(pl.LightningDataModule):
             use_top_slices=True,
             number_of_top_slices=self.args.num_of_top_slices,
             restrict_size=False,
-            big_test=False
+            big_test=self.big_test
         )
 
         self.train, self.validate = train_data, dev_data

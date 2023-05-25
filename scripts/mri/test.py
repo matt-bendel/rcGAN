@@ -22,6 +22,7 @@ import sigpy.mri as mr
 from utils.mri.transforms import to_tensor
 from DISTS_pytorch import DISTS
 
+
 def load_object(dct):
     return types.SimpleNamespace(**dct)
 
@@ -47,25 +48,16 @@ if __name__ == "__main__":
     args = create_arg_parser().parse_args()
     seed_everything(1, workers=True)
 
-    args.mask_type = 1
+    with open('configs/mri.yml', 'r') as f:
+        cfg = yaml.load(f, Loader=yaml.FullLoader)
+        cfg = json.loads(json.dumps(cfg), object_hook=load_object)
 
-    if args.default_model_descriptor:
-        args.num_noise = 1
+    cfg.batch_size = cfg.batch_size * 4
+    dm = MRIDataModule(cfg, big_test=True)
 
-    if args.mri:
-        with open('configs/mri.yml', 'r') as f:
-            cfg = yaml.load(f, Loader=yaml.FullLoader)
-            cfg = json.loads(json.dumps(cfg), object_hook=load_object)
-
-        cfg.batch_size = cfg.batch_size * 4
-        dm = MRIDataModule(cfg, big_test=True)
-
-        dm.setup()
-        test_loader = dm.test_dataloader()
-        model_alias = rcGAN
-    else:
-        print("No valid application selected. Please include one of the following args: --mri")
-        exit()
+    dm.setup()
+    test_loader = dm.test_dataloader()
+    model_alias = rcGAN
 
     train_dataloader = dm.train_dataloader()
     val_dataloader = dm.val_dataloader()

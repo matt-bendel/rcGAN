@@ -1,5 +1,6 @@
 checkpoint_dir: "/storage/matt_models/mri/"
 data_path: "/storage/fastMRI_brain/data"
+sense_maps_path: "/storage/fastMRI_brain/sense_maps/"
 
 # MRI Args
 num_of_top_slices: 8

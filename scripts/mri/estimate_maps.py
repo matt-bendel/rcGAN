@@ -23,15 +23,23 @@ def load_object(dct):
 
 if __name__ == '__main__':
     torch.set_float32_matmul_precision('medium')
+    args = create_arg_parser().parse_args()
+
     seed_everything(1, workers=True)
 
     with open('configs/mri.yml', 'r') as f:
         cfg = yaml.load(f, Loader=yaml.FullLoader)
         cfg = json.loads(json.dumps(cfg), object_hook=load_object)
 
-    dm = MRIDataModule(cfg)
+    dm = MRIDataModule(cfg, big_test=True)
     dm.setup()
-    val_loader = dm.val_dataloader()
+
+    if args.sense_maps_val:
+        loader = dm.val_dataloader()
+        maps_path = cfg.sense_maps_path + "val_full_res"
+    else:
+        loader = dm.test_dataloader()
+        maps_path = cfg.sense_maps_path + "test_full_res"
 
     for i, data in enumerate(val_loader):
         y, x, mask, mean, std, maps, fname, slice = data
@@ -45,6 +53,5 @@ if __name__ == '__main__':
                                        device=sp.Device(0), crop=0.70,
                                        kernel_width=6).run().get()
 
-            # TODO: Change path below for your storage path
-            with open(f'/storage/fastMRI_brain/sense_maps/val_full_res/{fname[j]}_{slice[j]}.pkl', 'wb') as outp:
+            with open(f'{maps_path}/{fname[j]}_{slice[j]}.pkl', 'wb') as outp:
                 pickle.dump(maps, outp, pickle.HIGHEST_PROTOCOL)
