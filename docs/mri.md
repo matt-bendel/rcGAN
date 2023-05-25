@@ -58,7 +58,7 @@ This is important for the next step, validation.
 ## Validation
 During training, validation is necessary in order to update the weight applied to
 the standard deviation reward. However, we select our best model according to validation
-Conditonal Frechet Inception Distance (CFID) LINK. So, we must also retrospectively validate.
+Conditonal Frechet Inception Distance ([CFID](https://arxiv.org/abs/2103.11521)). So, we must also retrospectively validate.
 
 To do so, run the following command:
 ```python
@@ -77,7 +77,7 @@ python /scripts/mri/test.py --exp-name rcgan_test
 ```
 This will test all aforementioned metrics on the average reconstruction for 1, 2, 4, 8, 16, and 32 samples.
 
-#### Note: Testing logic for (C)FID remains a TODO.
+#### Note: Testing logic for FID remains a TODO.
 
 ## Plot
 TODO

@@ -1,29 +1,13 @@
 # A Regularized Conditional GAN for Posterior Sampling in Inverse Problems [[arXiv]](https://arxiv.org/abs/2210.13389)
-## Utilization Instructions
-First, install the required modules via
-```
-pip install -r requirements.txt
-```
+## Setup
+See ```docs/setup.md``` for basic environment setup instructions.
 
-Next, set the location of the checkpoint directory in both config files, found in the ``config/`` folder. Then,
-download [the fastMRI dataset](https://fastmri.med.nyu.edu/) or [the celebA-HQ 256x256 dataset](https://drive.google.com/drive/folders/11Vz0fqHS2rXDb5pprgTjpD7S2BAJhi1P).
+## Reproducing our Results
+### MRI
+See ```docs/mri.md``` for instructions on how to setup and reproduce our MRI results.
 
-There are three primary scripts: ``train.py``, ``test.py``, and ``plot.py``. To train models, run
-```python train.py```. To parralelize models on multiple GPUs, be sure to include the ``--data-parallel`` argument.
-To run any of the scripts on MRI data, include the ``--is-mri`` argument. Other arguments and
-their function can be found in ``parse_args.py``.
-
-E.g., to run the training for MRI on multiple GPUs you would use
-```
-python train.py --data-parallel --is-mri
-```
-
-### Extending the Code
-To extend the code to work for other datasets, you will want to create a new generator
-wrapper in ``generator_wrappers/``. This should handle all reconstruction logic (e.g., giving inputs to the generator,
-generating latent vectors, data-consistency, etc.). Then, you will want to create a new data loader
-for your new dataset in ``data_loaders/``. Finally, small modifications will need to be made to the files in
-the ``runners/`` directory for application specific logic (see the MRI vs. inpainting examples).
+## Extending the Code
+See ```docs/new_applications.md``` for basic instructions on how to extend the code to your application.
 
 ## References
 This repository contains code from the following works, which should be cited:
