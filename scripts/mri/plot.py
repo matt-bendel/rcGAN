@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     with torch.no_grad():
         rcGAN_model = rcGAN.load_from_checkpoint(
-            checkpoint_path=cfg.checkpoint_dir + cfg.checkpoint_dir + args.exp_name + '/checkpoint_best.ckpt')
+            checkpoint_path=cfg.checkpoint_dir + args.exp_name + '/checkpoint_best.ckpt')
 
         rcGAN_model.cuda()
 
