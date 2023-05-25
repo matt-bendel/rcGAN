@@ -12,6 +12,13 @@ See ```docs/new_applications.md``` for basic instructions on how to extend the c
 ## Questions and Concerns
 If you have any questions, or run into any issues, don't hesitate to reach out at bendel.8@osu.edu.
 
+## TODO
+- [x] Migrate to PyTorch Lightning
+- [x] Reimplement MRI rcGAN
+- [x] Update MRI experiment to R=8
+- [ ] Reimplement inpainting rcGAN
+- [ ] Extend to super resolution
+
 ## References
 This repository contains code from the following works, which should be cited:
 

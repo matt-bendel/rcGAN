@@ -77,8 +77,6 @@ python /scripts/mri/test.py --exp-name rcgan_test
 ```
 This will test all aforementioned metrics on the average reconstruction for 1, 2, 4, 8, 16, and 32 samples.
 
-#### Note: Testing logic for FID remains a TODO.
-
 ## Plot
 To generate figures similar to those found in our paper, execute the following command:
 ```python
