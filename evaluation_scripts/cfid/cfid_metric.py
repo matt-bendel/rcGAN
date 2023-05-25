@@ -10,7 +10,7 @@ import torchvision.transforms as transforms
 from utils.mri.fftc import fft2c_new, ifft2c_new
 from utils.mri.math import complex_abs, tensor_to_complex_np
 from tqdm import tqdm
-from data.transforms import to_tensor
+from fastmri.data.transforms import to_tensor
 
 def symmetric_matrix_square_root_torch(mat, eps=1e-10):
     """Compute square root of a symmetric matrix.
