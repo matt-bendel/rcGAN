@@ -9,6 +9,9 @@ See ```docs/mri.md``` for instructions on how to setup and reproduce our MRI res
 ## Extending the Code
 See ```docs/new_applications.md``` for basic instructions on how to extend the code to your application.
 
+## Questions and Concerns
+If you have any questions, or run into any issues, don't hesitate to reach out at bendel.8@osu.edu.
+
 ## References
 This repository contains code from the following works, which should be cited:
 

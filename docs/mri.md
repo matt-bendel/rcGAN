@@ -83,4 +83,4 @@ This will test all aforementioned metrics on the average reconstruction for 1, 2
 TODO
 
 ## Questions and Concerns
-If you have any questions, or run into any issues, don't hesitate to reach out a bendel.8@osu.edu.
+If you have any questions, or run into any issues, don't hesitate to reach out at bendel.8@osu.edu.

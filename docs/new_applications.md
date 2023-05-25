@@ -106,4 +106,4 @@ model based on some tracked metric (e.g., psnr, ssim, etc.). See the [lightning 
 see [torchmetrics](https://torchmetrics.readthedocs.io/en/stable/) for options which would be easy to integrate.
 
 ## Questions and Concerns
-If you have any questions, or run into any issues, don't hesitate to reach out a bendel.8@osu.edu.
+If you have any questions, or run into any issues, don't hesitate to reach out at bendel.8@osu.edu.
