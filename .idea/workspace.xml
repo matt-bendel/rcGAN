@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5325b1d-e37b-4345-b080-21ad24c9aa46" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/mri/create_test_set.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/mri/create_test_set.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/mri/mr_test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/mri/mr_test.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -232,7 +234,7 @@
       <workItem from="1666711407540" duration="2838000" />
       <workItem from="1668701794495" duration="2725000" />
       <workItem from="1668719799086" duration="791000" />
-      <workItem from="1684963294638" duration="18652000" />
+      <workItem from="1684963294638" duration="18687000" />
     </task>
     <servers />
   </component>
