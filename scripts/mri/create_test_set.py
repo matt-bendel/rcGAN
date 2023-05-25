@@ -14,10 +14,13 @@ if __name__ == "__main__":
     with open('scripts/mri/mr_test.txt') as f:
         test_files = f.read().split('\n')
 
-    os.mkdir(os.path.join(cfg.data_path, 'small_T2_test'))
+    # os.mkdir(os.path.join(cfg.data_path, 'small_T2_test'))
 
     for file in test_files:
         old_file_path = os.path.join(cfg.data_path, f'multicoil_val/{file}')
         new_file_path = os.path.join(cfg.data_path, f'small_T2_test/{file}')
+        print(old_file_path)
+        print(new_file_path)
+        print('\n\n')
 
-        shutil.move(old_file_path, new_file_path)
+        # shutil.move(old_file_path, new_file_path)
