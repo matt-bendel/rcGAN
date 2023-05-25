@@ -266,7 +266,7 @@ class rcGAN(pl.LightningModule):
         mu_0 = 2e-2
         self.std_mult += mu_0 * psnr_diff
 
-        if np.abs(psnr_diff) <= 0.25:
+        if np.abs(psnr_diff) <= self.args.psnr_gain_tol:
             self.is_good_model = 1
         else:
             self.is_good_model = 0

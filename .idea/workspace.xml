@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5325b1d-e37b-4345-b080-21ad24c9aa46" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/evaluation_scripts/cfid/cfid_metric.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation_scripts/cfid/cfid_metric.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/mri.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configs/mri.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/lightning/rcGAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/lightning/rcGAN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/mri/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/mri/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/mri/validate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/mri/validate.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -231,7 +235,7 @@
       <workItem from="1666711407540" duration="2838000" />
       <workItem from="1668701794495" duration="2725000" />
       <workItem from="1668719799086" duration="791000" />
-      <workItem from="1684963294638" duration="13622000" />
+      <workItem from="1684963294638" duration="15092000" />
     </task>
     <servers />
   </component>

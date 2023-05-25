@@ -56,17 +56,16 @@ if __name__ == "__main__":
     dm = MRIDataModule(cfg, big_test=True)
 
     dm.setup()
-    test_loader = dm.test_dataloader()
-    model_alias = rcGAN
 
     train_dataloader = dm.train_dataloader()
     val_dataloader = dm.val_dataloader()
+    test_loader = dm.test_dataloader()
 
     lpips_met = lpips.LPIPS(net='alex')
     dists_met = DISTS()
 
     with torch.no_grad():
-        model = model_alias.load_from_checkpoint(
+        model = rcGAN.load_from_checkpoint(
             checkpoint_path=cfg.checkpoint_dir + args.exp_name + '/checkpoint_best.ckpt')
         model.cuda()
         model.eval()
@@ -120,10 +119,10 @@ if __name__ == "__main__":
                     distss.append(dists_met(rgb(gt_np, unit_norm=True), rgb(avg_gen_np, unit_norm=True)).numpy())
 
             print('AVG Recon')
-            print(f'PSNR: {np.mean(psnrs)} \pm {np.std(psnrs) / np.sqrt(len(psnrs))}')
-            print(f'SSIM: {np.mean(ssims)} \pm {np.std(ssims) / np.sqrt(len(ssims))}')
-            print(f'LPIPS: {np.mean(lpipss)} \pm {np.std(lpipss) / np.sqrt(len(lpipss))}')
-            print(f'DISTS: {np.mean(distss)} \pm {np.std(distss) / np.sqrt(len(distss))}')
+            print(f'PSNR: {np.mean(psnrs):.2f} \pm {np.std(psnrs) / np.sqrt(len(psnrs)):.2f}')
+            print(f'SSIM: {np.mean(ssims):.4f} \pm {np.std(ssims) / np.sqrt(len(ssims))}:.4f')
+            print(f'LPIPS: {np.mean(lpipss):.4f} \pm {np.std(lpipss) / np.sqrt(len(lpipss))}:.4f')
+            print(f'DISTS: {np.mean(distss):.4f} \pm {np.std(distss) / np.sqrt(len(distss)):.4f}')
             print(f'APSD: {np.mean(apsds)}')
 
     cfids = []
@@ -176,6 +175,6 @@ if __name__ == "__main__":
     m_comps.append(m_comp)
     c_comps.append(c_comp)
 
-
+    print("\n\n")
     for l in range(3):
         print(f'CFID_{l+1}: {cfids[l]:.2f}; M_COMP: {m_comps[l]:.4f}; C_COMP: {c_comps[l]:.4f}')

@@ -33,3 +33,4 @@ adv_weight: 1e-5
 # Training
 batch_size: 9
 num_epochs: 100
+psnr_gain_tol: 0.25
