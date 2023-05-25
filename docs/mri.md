@@ -80,7 +80,17 @@ This will test all aforementioned metrics on the average reconstruction for 1, 2
 #### Note: Testing logic for FID remains a TODO.
 
 ## Plot
-TODO
+To generate figures similar to those found in our paper, execute the following command:
+```python
+python /scripts/mri/test.py --exp-name rcgan_test --num-figs 5
+```
+where ```--num-figs``` controls the number of figures to generate. This script generates two different
+kinds of figures:
+1. A global figure which features the 32-sample avg. reconstruction, error map, and std. deviation map.
+2. A figure which focuses on a randomly selected zoomed region. This figure shows the 32-, 4-, and 2-sample average
+reconstructions, as well as 2 individual samples.
+
+The figures are saved in ```figures/mri```.
 
 ## Questions and Concerns
 If you have any questions, or run into any issues, don't hesitate to reach out at bendel.8@osu.edu.

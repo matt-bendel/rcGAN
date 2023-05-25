@@ -16,6 +16,7 @@ def create_arg_parser():
                         help='If the application is your custom application')
     parser.add_argument('--exp-name', type=str, default="", help='Name for the run.')
     parser.add_argument('--num-gpus', default=1, type=int, help='The number of GPUs to use during training.')
+    parser.add_argument('--num-figs', default=1, type=int, help='The number of figures to generate while plotting.')
 
     parser.add_argument('--sense-maps-val', action='store_true',
                         help='Whether or not to generate sense maps for validation data.')

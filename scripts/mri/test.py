@@ -120,10 +120,10 @@ if __name__ == "__main__":
 
             print('AVG Recon')
             print(f'PSNR: {np.mean(psnrs):.2f} \pm {np.std(psnrs) / np.sqrt(len(psnrs)):.2f}')
-            print(f'SSIM: {np.mean(ssims):.4f} \pm {np.std(ssims) / np.sqrt(len(ssims))}:.4f')
-            print(f'LPIPS: {np.mean(lpipss):.4f} \pm {np.std(lpipss) / np.sqrt(len(lpipss))}:.4f')
+            print(f'SSIM: {np.mean(ssims):.4f} \pm {np.std(ssims) / np.sqrt(len(ssims)):.4f}')
+            print(f'LPIPS: {np.mean(lpipss):.4f} \pm {np.std(lpipss) / np.sqrt(len(lpipss)):.4f}')
             print(f'DISTS: {np.mean(distss):.4f} \pm {np.std(distss) / np.sqrt(len(distss)):.4f}')
-            print(f'APSD: {np.mean(apsds)}')
+            print(f'APSD: {np.mean(apsds):.1f}')
 
     cfids = []
     m_comps = []
