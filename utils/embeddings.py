@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import Parameter as P
 from torchvision.models.inception import inception_v3
+from torchvision.models import vgg16
 
 
 class IdentityEmbedding:
@@ -86,7 +87,7 @@ class WrapInception(nn.Module):
         # 17 x 17 x 768
         # 17 x 17 x 768
         x = self.net.Mixed_7a(x)
-        # 8 x 8 x 3840
+        # 8 x 8 x 1280
         x = self.net.Mixed_7b(x)
         # 8 x 8 x 2048
         x = self.net.Mixed_7c(x)
@@ -94,3 +95,61 @@ class WrapInception(nn.Module):
         pool = F.adaptive_avg_pool2d(x, 1).view(x.size(0), -1)
         # 1 x 1 x 2048
         return pool
+
+class VGG16Embedding:
+    def __init__(self, parallel=False):
+        # Expects inputs to be in range [-1, 1]
+        vgg_model = vgg16(pretrained=True).eval()
+        vgg_model = WrapVGG(vgg_model).cuda()
+        if parallel:
+            vgg_model = nn.DataParallel(vgg_model)
+
+        self.vgg_model = vgg_model
+
+    def __call__(self, x):
+        return self.vgg_model(x)
+
+class WrapVGG(nn.Module):
+    def __init__(self, net):
+        super(WrapVGG, self).__init__()
+        self.features = list(net.features)
+        self.features = nn.Sequential(*self.features)
+        # Extract VGG-16 Average Pooling Layer
+        # self.pooling = net.avgpool
+        self.pooling = nn.AdaptiveAvgPool2d((1, 1))
+
+        # Convert the image into one-dimensional vector
+        self.flatten = nn.Flatten()
+        # Extract the first part of fully-connected layer from VGG16
+        self.fc = net.classifier[:-5]
+        print(self.fc)
+
+        # net.classifier = net.classifier[:-1]
+        self.net = net
+        self.mean = P(torch.tensor([0.485, 0.456, 0.406]).view(1, -1, 1, 1),
+                      requires_grad=False)
+        self.std = P(torch.tensor([0.229, 0.224, 0.225]).view(1, -1, 1, 1),
+                     requires_grad=False)
+
+    def forward(self, x):
+        # Normalize x
+        # x = (x + 1.) / 2.0  # assume the input is normalized to [-1, 1], reset it to [0, 1]
+
+        # if x.shape[2] != 256 or x.shape[3] != 256:
+        #     x = F.interpolate(x, size=(256, 256), mode='bilinear', align_corners=True)
+            # x = TF.resize(x, 256)
+        #
+        # x = TF.center_crop(x, 224)
+        #
+        # x = (x - self.mean) / self.std
+
+        # Upsample if necessary
+        # if x.shape[2] != 224 or x.shape[3] != 224:
+        #     x = F.interpolate(x, size=(224, 224), mode='bilinear', align_corners=True)
+
+        out = self.features(x)
+        # out = self.pooling(out)
+        out = self.pooling(out).view(x.size(0), -1)
+        # out = self.flatten(out)
+        # out = self.fc(out)
+        return out
