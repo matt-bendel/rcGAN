@@ -138,7 +138,18 @@ class MRIDataModule(pl.LightningDataModule):
             big_test=self.big_test
         )
 
-        self.train, self.validate = train_data, dev_data
+        test_data = SelectiveSliceData_Test(
+            root=pathlib.Path(self.args.data_path) / 'small_T2_test',
+            transform=DataTransform(self.args, test=True),
+            challenge='multicoil',
+            sample_rate=1,
+            use_top_slices=True,
+            number_of_top_slices=6,
+            restrict_size=False,
+            big_test=True
+        )
+
+        self.train, self.validate, self.test = train_data, dev_data, test_data
 
     # define your dataloaders
     # again, here defined for train, validate and test, not for predict as the project is not there yet.
@@ -158,4 +169,13 @@ class MRIDataModule(pl.LightningDataModule):
             num_workers=4,
             drop_last=True,
             pin_memory=False
+        )
+
+    def test_dataloader(self):
+        return DataLoader(
+            dataset=self.test,
+            batch_size=4,
+            num_workers=4,
+            pin_memory=False,
+            drop_last=False
         )
