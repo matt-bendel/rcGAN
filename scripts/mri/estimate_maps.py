@@ -34,6 +34,8 @@ if __name__ == '__main__':
     dm = MRIDataModule(cfg, big_test=True)
     dm.setup()
 
+    # TODO: Automatically create sense map dir
+
     if args.sense_maps_val:
         loader = dm.val_dataloader()
         maps_path = cfg.sense_maps_path + "val_full_res"
