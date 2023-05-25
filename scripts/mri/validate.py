@@ -6,7 +6,7 @@ import json
 import numpy as np
 import pytorch_lightning as pl
 
-from data.datasets.MRIDataModule import MRIDataModule
+from data.lightning.MRIDataModule import MRIDataModule
 from utils.parse_args import create_arg_parser
 from models.lightning.rcGAN import rcGAN
 from pytorch_lightning import seed_everything
