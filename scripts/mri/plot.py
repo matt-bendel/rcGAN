@@ -154,11 +154,11 @@ if __name__ == "__main__":
                 ax.set_yticklabels([])
                 ax.set_xticks([])
                 ax.set_yticks([])
-                ax.set_title("Std. Dev. Map")
+                ax.set_title("Std. Dev.")
 
                 plt.savefig(f'figures/mri/mri_fig_avg_err_std_{fig_count}.png', bbox_inches='tight', dpi=300)
+                plt.close(fig)
 
-                # TODO: Rizwan Idea: zoomed, 1st row avg, 2nd error, 3rd std. dev, 4, 5, 6 samps
                 nrow = 1
                 ncol = 8
 
@@ -197,10 +197,10 @@ if __name__ == "__main__":
                 ax.set_title('Truth')
 
                 connection_path_1 = patches.ConnectionPatch([zoom_startx + zoom_length, zoom_starty],
-                                                            [zoom_length, zoom_length], coordsA=ax1.transData,
+                                                            [0, 0], coordsA=ax1.transData,
                                                             coordsB=ax.transData, color='r')
                 fig.add_artist(connection_path_1)
-                connection_path_2 = patches.ConnectionPatch([zoom_startx, zoom_starty], [0, zoom_length],
+                connection_path_2 = patches.ConnectionPatch([zoom_startx + zoom_length, zoom_starty + zoom_length], [0, zoom_length],
                                                             coordsA=ax1.transData,
                                                             coordsB=ax.transData, color='r')
                 fig.add_artist(connection_path_2)
@@ -266,9 +266,10 @@ if __name__ == "__main__":
                 ax.set_yticklabels([])
                 ax.set_xticks([])
                 ax.set_yticks([])
-                ax.set_title('Std. Dev. Map')
+                ax.set_title('Std. Dev.')
 
                 plt.savefig(f'figures/mri/zoomed_avg_samps_{fig_count}.png', bbox_inches='tight', dpi=300)
+                plt.close(fig)
 
                 if fig_count == args.num_figs:
                     exit()
