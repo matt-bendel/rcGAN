@@ -41,7 +41,7 @@ if __name__ == '__main__':
         loader = dm.test_dataloader()
         maps_path = cfg.sense_maps_path + "test_full_res"
 
-    for i, data in enumerate(val_loader):
+    for i, data in enumerate(loader):
         y, x, mask, mean, std, maps, fname, slice = data
         new_y = torch.zeros(y.size(0), 8, 384, 384, 2)
         new_y[:, :, :, :, 0] = y[:, 0:8, :, :]
