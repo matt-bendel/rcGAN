@@ -1,0 +1,36 @@
+checkpoint_dir: "/storage/matt_models/mri/"
+data_path: "/storage/fastMRI_brain/data"
+sense_maps_path: "/storage/fastMRI_brain/sense_maps/"
+
+# MRI Args
+num_of_top_slices: 8
+use-middle-slices: false
+calib_width: 16
+R: 8
+
+# Number of code vectors for each phase
+num_z_test: 32
+num_z_valid: 8
+num_z_train: 2
+
+# Data
+in_chans: 16
+out_chans: 16
+im_size: 384
+
+# Number of virtual coils
+num_coils: 8
+
+# Optimizer:
+lr: 0.001
+beta_1: 0
+beta_2: 0.99
+
+# Loss weights
+gp_weight: 10
+adv_weight: 1e-5
+
+# Training
+batch_size: 9
+num_epochs: 100
+psnr_gain_tol: 0.25
