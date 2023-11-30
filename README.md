@@ -1,4 +1,15 @@
-# A Regularized Conditional GAN for Posterior Sampling in Inverse Problems [[arXiv]](https://arxiv.org/abs/2210.13389)
+# A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems, NeurIPS 2023 [[arXiv]](https://arxiv.org/abs/2210.13389) [[Open Review]](https://openreview.net/pdf?id=z4vKRmq7UO)
+
+This repo contains the official implementation for the paper [A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems](https://openreview.net/forum?id=z4vKRmq7UO)
+
+By: Matthew Bendel, Rizwan Ahmad, and Philip Schniter
+
+## Abstract
+In image recovery problems, one seeks to infer an image from distorted, incomplete, and/or noise-corrupted measurements. Such problems arise in magnetic resonance imaging (MRI), computed tomography, deblurring, super-resolution, inpainting, phase retrieval, image-to-image translation, and other applications. Given a training set of signal/measurement pairs, we seek to do more than just produce one good image estimate. Rather, we aim to rapidly and accurately sample from the posterior distribution. To do this, we propose a regularized conditional Wasserstein GAN that generates dozens of high-quality posterior samples per second. Our regularization comprises an 
+L1 penalty and an adaptively weighted standard-deviation reward. Using quantitative evaluation metrics like conditional Fréchet inception distance, we demonstrate that our method produces state-of-the-art posterior samples in both multicoil MRI and large-scale inpainting applications.
+
+---
+
 ## Setup
 See ```docs/setup.md``` for basic environment setup instructions.
 
@@ -11,13 +22,6 @@ See ```docs/new_applications.md``` for basic instructions on how to extend the c
 
 ## Questions and Concerns
 If you have any questions, or run into any issues, don't hesitate to reach out at bendel.8@osu.edu.
-
-## TODO
-- [x] Migrate to PyTorch Lightning
-- [x] Reimplement MRI rcGAN
-- [x] Update MRI experiment to R=8
-- [ ] Reimplement inpainting rcGAN
-- [ ] Extend to super resolution
 
 ## References
 This repository contains code from the following works, which should be cited:
