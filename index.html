@@ -134,6 +134,10 @@
 		color: white !important;
 		font-weight: bold;
 	}
+
+	.rotate-90 {
+		transform: rotate(-90deg);
+	}
 </style>
 
 <html>
@@ -170,11 +174,11 @@
 						<a class="nav-link" href="#reg">Our Approach</a>
 				  	</li>
 				  <li class="nav-item">
-					<a class="nav-link" href="#mri">MRI Results</a>
+					<a class="nav-link" href="#experiments">Experiments</a>
 				  </li>
-				  <li class="nav-item">
-					<a class="nav-link" href="#inpaint">Inpainting</a>
-				  </li>
+<!--				  <li class="nav-item">-->
+<!--					<a class="nav-link" href="#inpaint">Inpainting</a>-->
+<!--				  </li>-->
 				  <li class="nav-item">
 					<a class="nav-link" target="_blank" href="resources/paper.png">Paper</a>
 				  </li>
@@ -199,7 +203,6 @@
 				<a style="display: inline; width: auto;" href="resources/poster.pdf" target="_blank" rel="noopener noreferrer">[<i class="fas fa-file-image" aria-hidden="true"></i> Poster]</a>
 				<a style="display: inline; width: auto;" href="https://github.com/matt-bendel/rcGAN" target="_blank" rel="noopener noreferrer">[<i class="fab fa-github" aria-hidden="true"></i> Code]</a>
 			</div>
-			<img class="m-0 mt-3" src="resources/inpaint_fig.png" alt="Inpainting Reconstruction" style="width: 100%; max-width: 900px;"/>
 			<div class="osu-sep mt-5 mb-3"></div>
 			<h2 class="m-0 bold">Abstract</h2>
 			<p class="m-0 mt-3" style="text-align: left; font-size: 120%;">
@@ -208,49 +211,67 @@
 			<div id="reg" class="osu-sep mt-5 mb-3"></div>
 			<h2 class="m-0 bold">Our Approach</h2>
 			<p class="m-0 mt-3" style="text-align: left; font-size: 120%;">
-				We regularize the <span class="bold">generator</span> of our cGAN with a combination of an L1 penalty and a dynamically weighted standard deviation reward.
-				We also prove that regularizing with an L2 penalty on the sample average <span class="bold">encourages</span> mode collapse!
-				In a simple Gaussian setting, we can prove that our regularization yields a generator which samples with true posterior statistics.
-				Below, we show the cost surface of our regularization and L2 regularization plotted against the mean and standard deviation of a scalar-Gaussian posterior. For more information, please see our <a href="resources/paper.png" target="_blank">paper</a>!
+				We regularize the <span class="bold">generator</span> of our cGAN with an <span class="bold">L1 penalty</span> on the generator's sample average and a <span class="bold">dynamically weighted standard deviation reward</span>.
+				For the Gaussian case, we prove that our regularization recovers the correct posterior and that <span class="bold">L2/variance</span> regularization fails.<br><br>
+				Below, we show the cost surface of L2/variance regularization and ours plotted against the mean and standard deviation for a scalar-Gaussian posterior.<br>
+				For more detailed information, please see our <a href="resources/paper.png" target="_blank">paper</a>!
 			</p>
 			<div class="row mt-3">
-				<div class="col-lg-1"></div>
-				<div class="col-lg-5">
-					<h5 style="padding-left: 5%;">L2 Regularization</h5>
+				<div class="col-lg-4">
+					<h5 style="padding-left: 5%;">L2</h5>
 					<img class="m-0" src="resources/l2_reg.png" alt="MRI Reconstruction at R=4" style="width: 100%;"/>
 				</div>
-				<div class="col-lg-5">
-					<h5 style="padding-left: 5%;">Our Regularization</h5>
+				<div class="col-lg-4">
+					<h5 style="padding-left: 5%;">L2 + Variance Reward</h5>
+					<img class="m-0" src="resources/l2_var_reg.png" alt="MRI Reconstruction at R=8" style="width: 100%;"/>
+				</div>
+				<div class="col-lg-4">
+					<h5 style="padding-left: 5%;">Ours</h5>
 					<img class="m-0" src="resources/our_reg.png" alt="MRI Reconstruction at R=8" style="width: 100%;"/>
 				</div>
-				<div class="col-lg-1"></div>
 			</div>
-			<div id="mri" class="osu-sep mt-5 mb-3"></div>
-			<h2 class="m-0 bold">MRI Reconstruction</h2>
-			<p class="m-0 mt-3" style="font-size: 120%;">We apply rcGAN to multi-coil MRI reconstruction of fastMRI T2 brain images at R=4 and R=8.</p>
+			<h3 class="m-0 mt-3 bold">Learning the Correct Amount of Variation</h3>
+			<p class="m-0 mt-3" style="text-align: left; font-size: 120%;">
+				We <span class="bold">adapt</span> the weight on our standard deviation reward to ensure that we learn the <span class="bold">correct amount of variation</span>.<br><br>
+				We expect the PSNR of our generator's average reconstruction to improve with more samples. Below, we plot the theoretical PSNR gain we expect vs. the actual gain
+				from our generator for several different <span class="bold">static</span> values of the standard deviation reward weight, applied to R=4 MRI reconstruction.<br><br>
+				These results motivate an auto-tuning procedure which we discuss in detail in our <a href="resources/paper.png" target="_blank">paper</a>.
+			</p>
+			<div class="row center-row" style="position: relative;">
+				<div class="rotate-90" style="position: absolute; left: -40%;">
+					PSNR
+				</div>
+				<img class="m-0" src="resources/variation.png" alt="Visualizing the correct amount of variation" style="width: 100%;"/>
+			</div>
+			Number of Averaged Outputs (log scale)
+			<div id="experiments" class="osu-sep mt-5 mb-3"></div>
+			<h2 class="m-0 bold">Sample Reconstructions</h2>
+			<p class="m-0 mt-3" style=" text-align: left; font-size: 120%;">We applied rcGAN to multi-coil MRI reconstruction and large-scale image completion. For additional examples, please see our <a href="resources/supp.pdf" target="_blank">supplementary material</a>.</p>
 			<div class="row mt-3">
 				<div class="col-lg-6">
-					<h5 style="padding-left: 15%;">R=4</h5>
-					<img class="m-0" src="resources/mri_r4.png" alt="MRI Reconstruction at R=4" style="width: 100%;"/>
+					<h5 style="padding-left: 10%;">MRI Reconstruction</h5>
+					<img class="m-0" src="resources/mri_fig.png" alt="MRI Reconstruction" style="width: 100%;"/>
 				</div>
 				<div class="col-lg-6">
-					<h5 style="padding-left: 15%;">R=8</h5>
-					<img class="m-0" src="resources/mri_r8.png" alt="MRI Reconstruction at R=8" style="width: 100%;"/>
+					<h5 style="padding-left: 10%;">Image Completion</h5>
+					<img class="m-0 mt-3" src="resources/inpaint_fig.png" alt="Inpainting Reconstruction" style="width: 100%;"/>
 				</div>
 			</div>
-			<div id="inpaint" class="osu-sep mt-5 mb-3"></div>
-			<h2 class="m-0 bold">Large-Scale Image Completion</h2>
-			<p class="m-0 mt-3" style="font-size: 120%;">We apply rcGAN to large-scale image completion, filling in a centered 128x128 square in 256x256 CelebA-HQ images.</p>
-			<div class="row mt-3">
-				<div class="col-lg-6">
-					<img class="m-0 mt-2" src="resources/inpaint_1.png" alt="Inpainting Example 1" style="width: 100%;"/>
-					<img class="m-0 mt-2" src="resources/inpaint_2.png" alt="Inpainting Example 2" style="width: 100%;" />
-				</div>
-				<div class="col-lg-6">
-					<img class="m-0 mt-2" src="resources/inpaint_3.png" alt="Inpainting Example 3" style="width: 100%;"/>
-					<img class="m-0 mt-2" src="resources/inpaint_4.png" alt="Inpainting Example 4" style="width: 100%;"/>
-				</div>
-			</div>
+<!--			<div id="inpaint" class="osu-sep mt-5 mb-3"></div>-->
+<!--			<h2 class="m-0 bold">Large-Scale Image Completion</h2>-->
+<!--			<p class="m-0 mt-3" style="font-size: 120%;">We apply rcGAN to large-scale image completion, filling in a centered 128x128 square in 256x256 CelebA-HQ images.</p>-->
+<!--			<img class="m-0 mt-3" src="resources/inpaint_fig.png" alt="Inpainting Reconstruction" style="width: 100%; max-width: 900px;"/>-->
+
+<!--			<div class="row mt-3">-->
+<!--				<div class="col-lg-6">-->
+<!--					<img class="m-0 mt-2" src="resources/inpaint_1.png" alt="Inpainting Example 1" style="width: 100%;"/>-->
+<!--					<img class="m-0 mt-2" src="resources/inpaint_2.png" alt="Inpainting Example 2" style="width: 100%;" />-->
+<!--				</div>-->
+<!--				<div class="col-lg-6">-->
+<!--					<img class="m-0 mt-2" src="resources/inpaint_3.png" alt="Inpainting Example 3" style="width: 100%;"/>-->
+<!--					<img class="m-0 mt-2" src="resources/inpaint_4.png" alt="Inpainting Example 4" style="width: 100%;"/>-->
+<!--				</div>-->
+<!--			</div>-->
 			<div id="paper" class="osu-sep mt-5 mb-3"></div>
 			<h2 class="m-0 bold">Paper</h2>
 			<h4 class="bold">A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems</h4>
@@ -324,15 +345,13 @@
 								max-width: 100%;
 								min-width: 100px;
 								border-radius: 10px;
-								padding: 10;">
-			@inproceedings{Bendel:NIPS:23,
-				title={A Regularized Conitional GAN for Posterior Sampling in Image Recovery Problems},
-				author={Bendel, Matthew and Ahmad, Rizwan, and Schniter, Philip},
-				booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
-				year={2023},
-				url={https://openreview.net/forum?id=z4vKRmq7UO}
-			}
-			</pre>
+								padding: 10;">@inproceedings{Bendel:NIPS:23,
+	title={A Regularized Conitional GAN for Posterior Sampling in Image Recovery Problems},
+	author={Bendel, Matthew and Ahmad, Rizwan, and Schniter, Philip},
+	booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+	year={2023},
+	url={https://openreview.net/forum?id=z4vKRmq7UO}
+}</pre>
 
 			<div class="osu-sep mt-5 mb-3"></div>
 			<h3 class="bold m-0">Acknowledgements</h3>
