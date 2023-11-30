@@ -2,15 +2,6 @@
 <script type="text/javascript">google.load("jquery", "1.3.2");</script>
 
 <style type="text/css">
-	body {
-		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-		font-weight:300;
-		font-size:18px;
-		margin-left: auto;
-		margin-right: auto;
-		width: 1100px;
-	}
-	
 	h1 {
 		font-size:32px;
 		font-weight:300;
@@ -107,21 +98,49 @@
 		top: 50%;
 		transform: translateY(-50%);
 	}
+
+	.center-col {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		flex-direction: column;
+	}
+
+	.center-row {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		flex-direction: row;
+	}
+
+	.bold {
+		font-weight: bold;
+	}
 	
-	hr
-	{
-		border: 0;
-		height: 1px;
-		background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	.osu-sep {
+		background-color: #BB0000;
+		width: 100%;
+		height: 3px;
+	}
+
+	.nav-link {
+		color: white !important;
+		font-weight: bold;
+	}
+
+	.navbar-brand {
+		color: white !important;
+		font-weight: bold;
 	}
 </style>
 
 <html>
 <head>
 	<title>A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems</title>
-	<meta property="og:image" content="Path to my teaser.png"/> <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/ if you update and want to force Facebook to rescrape. -->
 	<meta property="og:title" content="A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems" />
-	<meta property="og:description" content="Paper description." />
+	<meta property="og:description" content="In image recovery problems, one seeks to infer an image from distorted, incomplete, and/or noise-corrupted measurements. Such problems arise in magnetic resonance imaging (MRI), computed tomography, deblurring, super-resolution, inpainting, phase retrieval, image-to-image translation, and other applications. Given a training set of signal/measurement pairs, we seek to do more than just produce one good image estimate. Rather, we aim to rapidly and accurately sample from the posterior distribution. To do this, we propose a regularized conditional Wasserstein GAN that generates dozens of high-quality posterior samples per second. Our regularization comprises an L1 penalty and an adaptively weighted standard-deviation reward. Using quantitative evaluation metrics like conditional Fréchet inception distance, we demonstrate that our method produces state-of-the-art posterior samples in both multicoil MRI and large-scale inpainting applications." />
 
 	<!-- Get from Google Analytics -->
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -133,175 +152,200 @@
 
 		gtag('config', 'UA-75863369-6');
 	</script>
+	<script src="https://kit.fontawesome.com/a4b7107b9e.js" crossorigin="anonymous"></script>
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
 <body>
-	<br>
-	<center>
-		<span style="font-size:36px">A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems</span>
-		<table align=center width=600px>
-			<table align=center width=600px>
-				<tr>
-					<td align=center width=100px>
-						<center>
-							<span style="font-size:24px">Matthew Bendel</span>
-						</center>
-					</td>
-					<td align=center width=100px>
-						<center>
-							<span style="font-size:24px">Rizwan Ahmad</span>
-						</center>
-					</td>
-					<td align=center width=100px>
-						<center>
-							<span style="font-size:24px">Philip Schniter</span>
-						</center>
-					</td>
-				</tr>
-			</table>
-			<table align=center width=250px>
-				<tr>
-					<td align=center width=120px>
-						<center>
-							<span style="font-size:24px"><a href=''>[Paper]</a></span>
-						</center>
-					</td>
-					<td align=center width=120px>
-						<center>
-							<span style="font-size:24px"><a href='https://github.com/richzhang/webpage-template'>[GitHub]</a></span><br>
-						</center>
-					</td>
-				</tr>
-			</table>
-		</table>
-	</center>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #BB0000 !important;">
+		<div class="container">
+			<a class="navbar-brand" href="#">rcGAN</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ml-auto" style="margin-left: auto;">
+					<li class="nav-item">
+						<a class="nav-link" href="#reg">Our Approach</a>
+				  	</li>
+				  <li class="nav-item">
+					<a class="nav-link" href="#mri">MRI Results</a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link" href="#inpaint">Inpainting</a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link" target="_blank" href="resources/paper.png">Paper</a>
+				  </li>
+				</ul>
+			</div>
+		</div>
 
-	<center>
-		<table align=center width=850px>
-			<tr>
-				<td width=260px>
-					<center>
-						<img class="round" style="width:500px" src="./resources/teaser.png"/>
-					</center>
-				</td>
-			</tr>
-		</table>
-		<table align=center width=850px>
-			<tr>
-				<td>
-					This was a template originally made for <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a>. The code can be found in this <a href="https://github.com/richzhang/webpage-template">repository</a>.
-				</td>
-			</tr>
-		</table>
-	</center>
+	</nav>
+	<div class="container">
+		<div class="col center-col">
+			<h2 class="m-0 mt-3 bold">A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems</h2>
+			<h3 class="m-0 mt-3">NeurIPS 2023</h3>
+			<div class="row center-row mt-3" style="width: 100%;">
+				<h4 class="pl-2 pr-2" style="display: inline; width: auto;">Matthew Bendel</h4>
+				<h4 class="pl-2 pr-2" style="display: inline; width: auto;">Rizwan Ahmad</h4>
+				<h4 class="pl-2 pr-2" style="display: inline; width: auto;">Philip Schniter</h4>
+			</div>
+			<img class="m-0 mt-3" src="resources/osu-logo-block.png" alt="Ohio State Logo" style="max-width: 300px;" />
+			<div class="row center-row mt-3" style="font-size: 24px; width: 100%;">
+				<a style="display: inline; width: auto;" href="resources/paper.pdf" target="_blank" rel="noopener noreferrer">[<i class="fas fa-file-pdf" aria-hidden="true"></i> Paper]</a>
+				<a style="display: inline; width: auto;" href="resources/supp.pdf" target="_blank" rel="noopener noreferrer">[<i class="fas fa-file-pdf" aria-hidden="true"></i> Supplementary]</a>
+				<a style="display: inline; width: auto;" href="resources/poster.pdf" target="_blank" rel="noopener noreferrer">[<i class="fas fa-file-image" aria-hidden="true"></i> Poster]</a>
+				<a style="display: inline; width: auto;" href="https://github.com/matt-bendel/rcGAN" target="_blank" rel="noopener noreferrer">[<i class="fab fa-github" aria-hidden="true"></i> Code]</a>
+			</div>
+			<img class="m-0 mt-3" src="resources/inpaint_fig.png" alt="Inpainting Reconstruction" style="width: 100%; max-width: 900px;"/>
+			<div class="osu-sep mt-5 mb-3"></div>
+			<h2 class="m-0 bold">Abstract</h2>
+			<p class="m-0 mt-3" style="text-align: left; font-size: 120%;">
+				In image recovery problems, one seeks to infer an image from distorted, incomplete, and/or noise-corrupted measurements. Such problems arise in magnetic resonance imaging (MRI), computed tomography, deblurring, super-resolution, inpainting, phase retrieval, image-to-image translation, and other applications. Given a training set of signal/measurement pairs, we seek to do more than just produce one good image estimate. Rather, we aim to rapidly and accurately sample from the posterior distribution. To do this, we propose a regularized conditional Wasserstein GAN that generates dozens of high-quality posterior samples per second. Our regularization comprises an L1 penalty and an adaptively weighted standard-deviation reward. Using quantitative evaluation metrics like conditional Fréchet inception distance, we demonstrate that our method produces state-of-the-art posterior samples in both multicoil MRI and large-scale inpainting applications.
+			</p>
+			<div id="reg" class="osu-sep mt-5 mb-3"></div>
+			<h2 class="m-0 bold">Our Approach</h2>
+			<p class="m-0 mt-3" style="text-align: left; font-size: 120%;">
+				We regularize the <span class="bold">generator</span> of our cGAN with a combination of an L1 penalty and a dynamically weighted standard deviation reward.
+				We also prove that regularizing with an L2 penalty on the sample average <span class="bold">encourages</span> mode collapse!
+				In a simple Gaussian setting, we can prove that our regularization yields a generator which samples with true posterior statistics.
+				Below, we show the cost surface of our regularization and L2 regularization plotted against the mean and standard deviation of a scalar-Gaussian posterior. For more information, please see our <a href="resources/paper.png" target="_blank">paper</a>!
+			</p>
+			<div class="row mt-3">
+				<div class="col-lg-1"></div>
+				<div class="col-lg-5">
+					<h5 style="padding-left: 5%;">L2 Regularization</h5>
+					<img class="m-0" src="resources/l2_reg.png" alt="MRI Reconstruction at R=4" style="width: 100%;"/>
+				</div>
+				<div class="col-lg-5">
+					<h5 style="padding-left: 5%;">Our Regularization</h5>
+					<img class="m-0" src="resources/our_reg.png" alt="MRI Reconstruction at R=8" style="width: 100%;"/>
+				</div>
+				<div class="col-lg-1"></div>
+			</div>
+			<div id="mri" class="osu-sep mt-5 mb-3"></div>
+			<h2 class="m-0 bold">MRI Results</h2>
+			<p class="m-0 mt-3" style="font-size: 120%;">We apply rcGAN to multi-coil MRI reconstruction at R=4 and R=8:</p>
+			<div class="row mt-3">
+				<div class="col-lg-6">
+					<h5 style="padding-left: 15%;">R=4</h5>
+					<img class="m-0" src="resources/mri_r4.png" alt="MRI Reconstruction at R=4" style="width: 100%;"/>
+				</div>
+				<div class="col-lg-6">
+					<h5 style="padding-left: 15%;">R=8</h5>
+					<img class="m-0" src="resources/mri_r8.png" alt="MRI Reconstruction at R=8" style="width: 100%;"/>
+				</div>
+			</div>
+			<div id="inpaint" class="osu-sep mt-5 mb-3"></div>
+			<h2 class="m-0 bold">Large-Scale Image Completion Results</h2>
+			<p class="m-0 mt-3" style="font-size: 120%;">We apply rcGAN to large-scale image completion, filling in a centered 128x128 square in 256x256 CelebA-HQ images.</p>
+			<div class="row mt-3">
+				<div class="col-lg-6">
+					<img class="m-0 mt-2" src="resources/inpaint_1.png" alt="Inpainting Example 1" style="width: 100%;"/>
+					<img class="m-0 mt-2" src="resources/inpaint_2.png" alt="Inpainting Example 2" style="width: 100%;" />
+				</div>
+				<div class="col-lg-6">
+					<img class="m-0 mt-2" src="resources/inpaint_3.png" alt="Inpainting Example 3" style="width: 100%;"/>
+					<img class="m-0 mt-2" src="resources/inpaint_4.png" alt="Inpainting Example 4" style="width: 100%;"/>
+				</div>
+			</div>
+			<div id="paper" class="osu-sep mt-5 mb-3"></div>
+			<h2 class="m-0 bold">Paper</h2>
+			<h4 class="bold">A Regularized Conditional GAN for Posterior Sampling in Image Recovery Problems</h4>
+			<h5>Matthew Bendel, Rizwan Ahmad, Philip Schniter</h5>
+			<div class="row row-center mt-3" style="width: 100%;">
+				<!-- start arXiv -->
+                <div class="col-3 center-col">
+					<a href="https://arxiv.org/abs/2210.13389" target="_blank" rel="noopener noreferrer">
+						<img alt="" class="layered-paper-big" style="height:100%; max-height: 175px; max-width: 200px;" src="./resources/paper.png">
+					</a>
+				</div>
+				<!-- end arXiv -->
 
-	<hr>
+				<!-- start paper -->
+                <div class="col-3 center-col">
+					<a href="resources/paper.pdf" target="_blank" rel="noopener noreferrer">
+						<img alt="" class="layered-paper-big" style="height:100%; max-height: 175px;" src="./resources/paper.png">
+					</a>
+				</div>
+				<!-- end paper -->
 
-	<table align=center width=850px>
-		<center><h1>Abstract</h1></center>
-		<tr>
-			<td>
-				This is my abstract.
-			</td>
-		</tr>
-	</table>
-	<br>
+				<!-- start supp -->
+                <div class="col-3 center-col">
+					<a href="resources/supp.pdf" target="_blank" rel="noopener noreferrer">
+						<img alt="" class="layered-paper-big" style="height:100%; max-height: 175px;" src="./resources/supp.png">
+					</a>
+				</div>
+				<!-- end supp -->
 
-	<hr>
-	<center><h1>Talk</h1></center>
-	<p align="center">
-		<iframe width="660" height="395" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen align="center"></iframe>
-	</p>
+				<!-- start github -->
+                <div class="col-3 center-col">
+					<a href="https://github.com/matt-bendel/rcGAN" target="_blank" rel="noopener noreferrer">
+						<img alt="" id="github_logo" class="round" style="max-width:150px" src="./resources/github_logo.png">
+					</a>
+				</div>
+				<!-- end github -->
 
-	<table align=center width=800px>
-		<br>
-		<tr>
-			<center>
-				<span style="font-size:28px"><a href=''>[Slides]</a>
-				</span>
-			</center>
-		</tr>
-	</table>
-	<hr>
+            </div>
+			<div class="row row-center mt-4" style="width: 100%;">
+				<!-- start arXiv -->
+                <div class="col-3 center-col">
+					<p style="margin-top: 5px;"><a href="https://arxiv.org/abs/2210.13389" target="_blank" rel="noopener noreferrer">[<i class="ai ai-arxiv"></i> ArXiv]</a></p>
+				</div>
+				<!-- end arXiv -->
 
-	<center><h1>Code</h1></center>
+				<!-- start paper -->
+                <div class="col-3 center-col">
+					<p style="margin-top: 5px;"><a href="resources/paper.pdf" target="_blank" rel="noopener noreferrer">[<i class="fas fa-file-pdf" aria-hidden="true"></i> Paper]</a></p>
+				</div>
+				<!-- end paper -->
 
-	<table align=center width=420px>
-		<center>
-			<tr>
-				<td>
-				</td>
-			</tr>
-		</center>
-	</table>
-	<table align=center width=400px>
-		<tr>
-			<td align=center width=400px>
-				<center>
-					<td><img class="round" style="width:450px" src="./resources/method_diagram.png"/></td>
-				</center>
-			</td>
-		</tr>
-	</table>
-	<table align=center width=850px>
-		<center>
-			<tr>
-				<td>
-					Short description if wanted
-				</td>
-			</tr>
-		</center>
-	</table>
-	<table align=center width=800px>
-		<br>
-		<tr><center>
-			<span style="font-size:28px">&nbsp;<a href='https://github.com/richzhang/webpage-template'>[GitHub]</a>
-			</center>
-		</span>
-	</table>
-	<br>
-	<hr>
-	<table align=center width=450px>
-		<center><h1>Paper and Supplementary Material</h1></center>
-		<tr>
-			<td><a href=""><img class="layered-paper-big" style="height:175px" src="./resources/paper.png"/></a></td>
-			<td><span style="font-size:14pt">F. Author, S. Author, T. Author.<br>
-				<b>Creative and Descriptive Paper Title.</b><br>
-				In Conference, 20XX.<br>
-				(hosted on <a href="">ArXiv</a>)<br>
-				<!-- (<a href="./resources/camera-ready.pdf">camera ready</a>)<br> -->
-				<span style="font-size:4pt"><a href=""><br></a>
-				</span>
-			</td>
-		</tr>
-	</table>
-	<br>
+				<!-- start supp -->
+                <div class="col-3 center-col">
+					<p style="margin-top: 5px;"><a href="resources/supp.pdf" target="_blank" rel="noopener noreferrer">[<i class="fas fa-file-pdf" aria-hidden="true"></i> Supplementary]</a></p>
+				</div>
+				<!-- end supp -->
 
-	<table align=center width=600px>
-		<tr>
-			<td><span style="font-size:14pt"><center>
-				<a href="./resources/bibtex.txt">[Bibtex]</a>
-			</center></td>
-		</tr>
-	</table>
+				<!-- start github -->
+                <div class="col-3 center-col">
+					<p style="margin-top: 5px;"><a target="_blank" rel="noopener noreferrer" href="https://github.com/matt-bendel/rcGAN">[Code]</a></p>
+				</div>
+				<!-- end github -->
 
-	<hr>
-	<br>
+            </div>
+			<div class="osu-sep mt-5 mb-3"></div>
+			<h2 class="m-0 bold">Bibtex</h2>
+			<pre class="command-copy mt-3" style=" display: block; text-align: left;
+								background: #eee;
+								white-space: pre;
+								-webkit-overflow-scrolling: touch;
+								max-width: 100%;
+								min-width: 100px;
+								border-radius: 10px;
+								padding: 10;">
+			@inproceedings{Bendel:NIPS:23,
+				title={A Regularized Conitional GAN for Posterior Sampling in Image Recovery Problems},
+				author={Bendel, Matthew and Ahmad, Rizwan, and Schniter, Philip},
+				booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+				year={2023},
+				url={https://openreview.net/forum?id=z4vKRmq7UO}
+			}
+			</pre>
 
-	<table align=center width=900px>
-		<tr>
-			<td width=400px>
-				<left>
-					<center><h1>Acknowledgements</h1></center>
-					This template was originally made by <a href="http://web.mit.edu/phillipi/">Phillip Isola</a> and <a href="http://richzhang.github.io/">Richard Zhang</a> for a <a href="http://richzhang.github.io/colorization/">colorful</a> ECCV project; the code can be found <a href="https://github.com/richzhang/webpage-template">here</a>.
-				</left>
-			</td>
-		</tr>
-	</table>
-
-	<br>
+			<div class="osu-sep mt-5 mb-3"></div>
+			<h3 class="bold m-0">Acknowledgements</h3>
+			<p class="mb-5 mt-3" style="font-size: 11pt; text-align: left;">
+				This webpage inspired by the template that was originally made by <a target="_blank" rel="noopener noreferrer" href="http://web.mit.edu/phillipi/">Phillip Isola</a> and
+				<a target="_blank" rel="noopener noreferrer" href="http://richzhang.github.io/">Richard Zhang</a> for a <a target="_blank" rel="noopener noreferrer" href="http://richzhang.github.io/colorization/">colorful</a> ECCV project;
+				the code for the original template can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/richzhang/webpage-template">here</a>.<br>
+				We also take design inspiration from the project page for <a href="https://eliasnehme.github.io/NPPC/" target="_blank">Uncertainty Quantification via Neural Posterior Principal Components</a>.
+				<br>This site uses <a target="_blank" rel="noopener noreferrer" href="https://getbootstrap.com/">bootstrap</a> and <a target="_blank" rel="noopener noreferrer" href="https://fontawesome.com/">font awesome</a>.
+				<br>
+			</p>
+		</div>
+	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>
