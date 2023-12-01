@@ -157,6 +157,8 @@
 		gtag('config', 'UA-75863369-6');
 	</script>
 	<script src="https://kit.fontawesome.com/a4b7107b9e.js" crossorigin="anonymous"></script>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
@@ -217,7 +219,7 @@
 				Below, we show the contour plots of several regularizations for the simple case of a <span class="bold">scalar-Gaussian posterior</span> .
 				The contours are plotted versus the generator parameters, which in this case are the posterior mean and standard deviation.
 				The plots show that minimizing the proposed regularization recovers the correct parameters, while minimizing the other regularizations does not.
-				For more details, please see our <a href="resources/paper.png" target="_blank">paper</a>!
+				Please see our <a href="resources/poster.pdf" target="_blank">poster</a> or our <a href="https://openreview.net/forum?id=z4vKRmq7UO" target="_blank">paper</a>!
 			</p>
 			<div class="row mt-3">
 				<div class="col-lg-4">
@@ -235,19 +237,15 @@
 			</div>
 			<h3 class="m-0 mt-3 bold">Adapting the Weight on the STD Reward</h3>
 			<p class="m-0 mt-3 mb-3" style="text-align: left; font-size: 120%;">
-				For the independent-Gaussian case, we derive the correct weight “beta” on the STD reward in closed form. For practical datasets, we propose a method to learn beta.
-				In particular, we <span class="bold">adapt</span> beta during training so that the SNR gain from averaging P posterior samples matches the expected theoretical behavior, the latter of which we derive in our paper.
+				For the independent-Gaussian case, we derive the correct weight \(\beta_{\text{std}} = \beta_{\text{std}}^{\mathcal{N}}\) on the STD reward in closed form. For practical datasets, we propose a method to learn \(\beta_{\text{std}}\).
+				In particular, we <span class="bold">adapt</span> \(\beta_{\text{std}}\) during training so that the SNR gain from averaging P posterior samples matches the expected theoretical behavior, the latter of which we derive in our paper.
 				<br><br>
-				The orange curves below show the <span class="bold">empirical SNR versus P</span> for various values of beta (for the case of multicoil MR image recovery) while the blue dashed curves show the <span class="bold">expected theoretical behavior</span>.
-				For more details, please see our <a href="resources/paper.png" target="_blank">paper</a>!
+				The orange curves below show the <span class="bold">empirical SNR versus P</span> for various values of \(\beta_{\text{std}}\) (for the case of multicoil MR image recovery) while the blue dashed curves show the <span class="bold">expected theoretical behavior</span>.
+				Please see our <a href="resources/poster.pdf" target="_blank">poster</a> or our <a href="https://openreview.net/forum?id=z4vKRmq7UO" target="_blank">paper</a>!
 			</p>
 			<div class="row center-row" style="position: relative; margin-top: -10px;">
-				<div class="rotate-90" style="position: absolute; left: -40%;">
-					Beta
-				</div>
-				<img class="m-0" src="resources/variation.png" alt="Visualizing the correct amount of variation" style="width: 100%;"/>
+				<img class="m-0" src="resources/beta_v_p.png" alt="Visualizing the correct amount of variation" style="width: 100%;"/>
 			</div>
-			P
 			<div id="experiments" class="osu-sep mt-5 mb-3"></div>
 			<h2 class="m-0 bold">Sample Reconstructions</h2>
 			<p class="m-0 mt-3" style=" text-align: left; font-size: 120%;">We applied rcGAN to multi-coil MRI reconstruction and large-scale image completion. For additional examples, please see our <a href="https://openreview.net/forum?id=z4vKRmq7UO" target="_blank">supplementary material</a>.</p>
@@ -351,7 +349,7 @@
 			<div class="osu-sep mt-5 mb-3"></div>
 			<h3 class="bold m-0">Acknowledgements</h3>
 			<p class="mb-5 mt-3" style="font-size: 11pt; text-align: left;">
-				The authors are funded in part by the National Institutes of Health under grant R01-EB029957 and the National Science Foundation under grant CCF-1955587.<br>
+				The authors are funded in part by the National Institutes of Health under grant R01-EB029957.<br>
 				This webpage is based off the template that was originally made by <a target="_blank" rel="noopener noreferrer" href="http://web.mit.edu/phillipi/">Phillip Isola</a> and
 				<a target="_blank" rel="noopener noreferrer" href="http://richzhang.github.io/">Richard Zhang</a> for a <a target="_blank" rel="noopener noreferrer" href="http://richzhang.github.io/colorization/">colorful</a> ECCV project;
 				the code for the original template can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/richzhang/webpage-template">here</a>.<br>
